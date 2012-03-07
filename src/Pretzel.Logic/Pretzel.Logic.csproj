@@ -86,6 +86,7 @@
     <Compile Include="Import\BloggerImport.cs" />
     <Compile Include="Import\HtmlToMarkdownConverter.cs" />
     <Compile Include="Import\WordpressImport.cs" />
+    <Compile Include="Import\WordpressImportSql.cs" />
     <Compile Include="Minification\FileSystemExtensions.cs" />
     <Compile Include="Minification\LessTransform.cs" />
     <Compile Include="Minification\ITransform.cs" />
