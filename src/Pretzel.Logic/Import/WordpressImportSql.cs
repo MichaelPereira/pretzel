@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.IO.Abstractions;
 using System.Text.RegularExpressions;
 using Pretzel.Logic.Extensions;
-using System.IO;
 
 namespace Pretzel.Logic.Import
 {
@@ -24,27 +22,31 @@ namespace Pretzel.Logic.Import
         }
 
 
-        new public void Import()
+        public void Import()
         {
-            int counter = 0;
-            string line;
-            Regex postRegex = new Regex(@"INSERT INTO `wp_posts` VALUES \((?<postId>\d+), (?<authorId>\d+), '[^']+', '(?<dategmt>[^']+)', '(?<content>.*)', '(?<title>.*)', '.*', 'publish'");
+            // Capture information for published posts
+            Regex postRegex = new Regex(@"INSERT INTO `wp_posts` VALUES \((?<postId>\d+), (?<authorId>\d+), '[^']+', '(?<dategmt>[^']+)', '(?<content>.*)', '(?<title>.*)', '.*', 'publish', '[^']*', '[^']*', '[^']*', '(?<postName>[^']*)'");
+            IList<WordpressPost> postList = new List<WordpressPost>();
             
-            IList<Tuple<int, int, WordpressPost>> postList = new List<Tuple<int, int, WordpressPost>>();
-            System.IO.StreamReader file = new System.IO.StreamReader(pathToImportFile);
-            while ((line = file.ReadLine()) != null)
+            string[] lines = fileSystem.File.ReadAllLines(pathToImportFile);
+
+            foreach (string line in lines)
             {
                 Match match = postRegex.Match(line);
                 if (match.Success)
-                {                    
-                    int postId = int.Parse(match.Groups["postId"].Value);
-                    int authorId = int.Parse(match.Groups["authorId"].Value);
-                    postList.Add(new Tuple<int, int, WordpressPost>(postId, authorId, new WordpressPost()));
+                {
+                    WordpressPost wpPost = new WordpressPost{
+                        authorId = int.Parse(match.Groups["authorId"].Value),
+                        postId = int.Parse(match.Groups["postId"].Value),
+                        Content = match.Groups["content"].Value,
+                        PostName = match.Groups["postName"].Value,
+                        Published = Convert.ToDateTime(match.Groups["dategmt"].Value),
+                        Title = match.Groups["title"].Value
+};                    
+                    postList.Add(wpPost);
+                    ImportPost(wpPost);
                 }
-                counter++;
             }
-
-            file.Close();
         }
 
         private void ImportPost(WordpressPost p)

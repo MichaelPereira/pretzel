@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.IO.Abstractions;
+using System.Linq;
 using System.Xml.Linq;
 using Pretzel.Logic.Extensions;
-using System.IO;
 
 namespace Pretzel.Logic.Import
 {
