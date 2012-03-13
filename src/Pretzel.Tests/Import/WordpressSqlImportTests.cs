@@ -14,36 +14,16 @@ namespace Pretzel.Tests.Import
     {
         const string BaseSite = @"c:\site\";
         const string ImportFile = @"c:\import.sql";
-        const string ImportContent = @"CREATE TABLE `wp_posts` (
-  `ID` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `post_author` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `post_date` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `post_date_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `post_content` longtext NOT NULL,
-  `post_title` text NOT NULL,
-  `post_excerpt` text NOT NULL,
-  `post_status` varchar(20) NOT NULL DEFAULT 'publish',
-  `comment_status` varchar(20) NOT NULL DEFAULT 'open',
-  `ping_status` varchar(20) NOT NULL DEFAULT 'open',
-  `post_password` varchar(20) NOT NULL DEFAULT '',
-  `post_name` varchar(200) NOT NULL DEFAULT '',
-  `to_ping` text NOT NULL,
-  `pinged` text NOT NULL,
-  `post_modified` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `post_modified_gmt` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `post_content_filtered` text NOT NULL,
-  `post_parent` bigint(20) unsigned NOT NULL DEFAULT '0',
-  `guid` varchar(255) NOT NULL DEFAULT '',
-  `menu_order` int(11) NOT NULL DEFAULT '0',
-  `post_type` varchar(20) NOT NULL DEFAULT 'post',
-  `post_mime_type` varchar(100) NOT NULL DEFAULT '',
-  `comment_count` bigint(20) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`),
-  KEY `post_name` (`post_name`),
-  KEY `type_status_date` (`post_type`,`post_status`,`post_date`,`ID`),
-  KEY `post_parent` (`post_parent`),
-  KEY `post_author` (`post_author`)
-) ENGINE=MyISAM AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 ;
+        const string ImportContent = @"
+INSERT INTO `wp_term_relationships` VALUES (28, 11, 0); 
+INSERT INTO `wp_term_relationships` VALUES (28, 10, 0); 
+...
+INSERT INTO `wp_term_taxonomy` VALUES (10, 10, 'category', '', 0, 1); 
+INSERT INTO `wp_term_taxonomy` VALUES (11, 11, 'post_tag', '', 0, 1); 
+...
+INSERT INTO `wp_terms` VALUES (10, 'Cloud', 'cloud', 0); 
+INSERT INTO `wp_terms` VALUES (11, 'cloud', 'cloud-2', 0); 
+...
 INSERT INTO `wp_posts` VALUES (2, 1, '2010-09-28 15:16:26', '2010-09-28 15:16:26', 'This is an example of a WordPress page, you could edit this to put information about yourself or your site so readers know where you are coming from. You can create as many pages like this one or sub-pages as you like and manage all of your content inside of WordPress.', 'About', '', 'publish', 'open', 'open', '', 'about', '', '', '2010-09-28 15:16:26', '2010-09-28 15:16:26', '', 0, 'http://www.michaelpereira.fr/blog/?page_id=2', 0, 'page', '', 0); 
 INSERT INTO `wp_posts` VALUES (29, 1, '2010-12-08 00:13:12', '2010-12-07 23:13:12', '', 'jolicloud-11-launcher', '', 'inherit', 'open', 'open', '', 'jolicloud-11-launcher', '', '', '2010-12-08 00:13:12', '2010-12-07 23:13:12', '', 28, 'http://www.michaelpereira.fr/blog/wp-content/uploads/2010/12/jolicloud-11-launcher.png', 1, 'attachment', 'image/png', 0); 
 INSERT INTO `wp_posts` VALUES (27, 1, '2010-11-22 01:05:15', '2010-11-22 00:05:15', 'This is an example of a WordPress page, you could edit this to put information about yourself or your site so readers know where you are coming from. You can create as many pages like this one or sub-pages as you like and manage all of your content inside of WordPress.', 'About', '', 'inherit', 'open', 'open', '', '2-autosave', '', '', '2010-11-22 01:05:15', '2010-11-22 00:05:15', '', 2, 'http://www.michaelpereira.fr/blog/2010/11/22/2-autosave/', 0, 'revision', '', 0); 
@@ -76,6 +56,8 @@ INSERT INTO `wp_posts` VALUES (28, 1, '2010-12-08 00:35:19', '2010-12-07 23:35:1
             var headerJolicloud = postContentJolicloud.YamlHeader();
 
             Assert.Equal("Recyclez votre vieux PC avec Jolicloud 1.1", headerJolicloud["title"].ToString());
+            Assert.NotNull(headerJolicloud["tags"]);
+            Assert.NotNull(headerJolicloud["categories"]);
         }
     }
 }
