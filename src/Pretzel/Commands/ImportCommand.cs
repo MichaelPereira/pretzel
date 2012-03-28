@@ -14,7 +14,7 @@ namespace Pretzel.Commands
     [CommandInfo(CommandName = "import")]
     class ImportCommand : ICommand
     {
-        readonly static List<string> Importers = new List<string>(new[] { "wordpress", "blogger" });
+        readonly static List<string> Importers = new List<string>(new[] { "wordpress", "blogger", "wordpressSql" });
 
 #pragma warning disable 649
         [Import] IFileSystem fileSystem;
@@ -29,7 +29,7 @@ namespace Pretzel.Commands
 
             if (!Importers.Any(e => String.Equals(e, parameters.ImportType, StringComparison.InvariantCultureIgnoreCase)))
             {
-                Tracing.Info(String.Format("Requested import type not found: {0}", parameters.ImportType));
+                Tracing.Error(String.Format("Requested import type not found: {0}", parameters.ImportType));
                 return;
             }
 
@@ -43,7 +43,16 @@ namespace Pretzel.Commands
                 var bloggerImporter = new BloggerImport(fileSystem, parameters.Path, parameters.ImportPath);
                 bloggerImporter.Import();
             }
-
+            else if (string.Equals("wordpressSql", parameters.ImportType, StringComparison.InvariantCultureIgnoreCase))
+            {
+                if (String.IsNullOrEmpty(parameters.ImportPath))
+                {
+                    Tracing.Error("Null or empty file name");
+                    return;
+                }
+                var wordpressImporter = new WordpressImportSql(fileSystem, parameters.Path, parameters.ImportPath);
+                wordpressImporter.Import();
+            }
             Tracing.Info("Import complete");
         }
 

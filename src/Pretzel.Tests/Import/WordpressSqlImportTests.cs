@@ -46,7 +46,7 @@ INSERT INTO `wp_posts` VALUES (28, 1, '2010-12-08 00:35:19', '2010-12-07 23:35:1
 
             Assert.True(fileSystem.File.Exists(BaseSite + "_posts\\2010-09-28-about.md"));
             Assert.True(fileSystem.File.Exists(BaseSite + "_posts\\2010-12-07-recyclez-votre-vieux-pc-avec-jolicloud-1-1.md"));
-
+            Assert.True(fileSystem.AllPaths.Count() == 3);
             var postContentAbout = fileSystem.File.ReadAllText(BaseSite + "_posts\\2010-09-28-about.md");
             var headerAbout = postContentAbout.YamlHeader();
 

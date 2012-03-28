@@ -42,7 +42,7 @@ namespace Pretzel.Logic.Import
                 {
                     int termId = int.Parse(matchRelationship.Groups["termId"].Value);
                     int postId = int.Parse(matchRelationship.Groups["postId"].Value);
-                    
+
                     // Check if the term is already in the list
                     if (terms.ContainsKey(termId))
                     {
@@ -52,7 +52,7 @@ namespace Pretzel.Logic.Import
                     {
                         terms.Add(termId, new Relationship()
                         {
-                            postIds = new List<int> {postId}
+                            postIds = new List<int> { postId }
                         });
                     }
                     continue;
@@ -62,7 +62,7 @@ namespace Pretzel.Logic.Import
                 if (matchType.Success)
                 {
                     int termId = int.Parse(matchType.Groups["termId"].Value);
-                    
+
                     // Set the type for termId element in the list
                     if (terms.ContainsKey(termId))
                     {
@@ -120,10 +120,13 @@ namespace Pretzel.Logic.Import
                 Relationship term = terms[key];
                 foreach (int postId in term.postIds)
                 {
-                    if (term.termType == termTypeEnum.category)
-                        postList[postId].Categories.Add(term.termName);
-                    else if (term.termType == termTypeEnum.tag)
-                        postList[postId].Tags.Add(term.termName);
+                    if (postList.Contains(postId))
+                    {
+                        if (term.termType == termTypeEnum.category)
+                            postList[postId].Categories.Add(term.termName);
+                        else if (term.termType == termTypeEnum.tag)
+                            postList[postId].Tags.Add(term.termName);
+                    }
                 }
             }
 
@@ -149,6 +152,9 @@ namespace Pretzel.Logic.Import
             var yamlHeader = string.Format("---\r\n{0}---\r\n\r\n", header.ToYaml());
             var postContent = yamlHeader + p.Content; //todo would be nice to convert to proper md
             var fileName = string.Format(@"_posts\{0}-{1}.md", p.Published.ToString("yyyy-MM-dd"), p.PostName.Replace(' ', '-')); //not sure about post name
+            
+            if (!Directory.Exists("_posts"))
+                Directory.CreateDirectory("_posts");
 
             fileSystem.File.WriteAllText(Path.Combine(pathToSite, fileName), postContent);
         }
