@@ -32,9 +32,15 @@ namespace Pretzel.Commands
                 Tracing.Error(String.Format("Requested import type not found: {0}", parameters.ImportType));
                 return;
             }
+            if (String.IsNullOrEmpty(parameters.ImportPath))
+            {
+                Tracing.Error("Null or empty file name");
+                return;
+            }
 
             if (string.Equals("wordpress", parameters.ImportType, StringComparison.InvariantCultureIgnoreCase))
             {
+
                 var wordpressImporter = new WordpressImport(fileSystem, parameters.Path, parameters.ImportPath);
                 wordpressImporter.Import();
             }
@@ -45,14 +51,10 @@ namespace Pretzel.Commands
             }
             else if (string.Equals("wordpressSql", parameters.ImportType, StringComparison.InvariantCultureIgnoreCase))
             {
-                if (String.IsNullOrEmpty(parameters.ImportPath))
-                {
-                    Tracing.Error("Null or empty file name");
-                    return;
-                }
                 var wordpressImporter = new WordpressImportSql(fileSystem, parameters.Path, parameters.ImportPath);
                 wordpressImporter.Import();
             }
+
             Tracing.Info("Import complete");
         }
 
