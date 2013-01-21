@@ -8,7 +8,7 @@ namespace Pretzel.Logic.Extensions
 {
     public static class YamlExtensions
     {
-        static readonly Regex r = new Regex(@"^---([\d\D\w\W\s\S]+)---", RegexOptions.Multiline);
+        static readonly Regex r = new Regex(@"(?s:^---(.*?)---)");
         public static IDictionary<string, object> YamlHeader(this string text, bool skipHeader = false)
         {
             StringReader input;
@@ -67,6 +67,21 @@ namespace Pretzel.Logic.Extensions
                 }
 
                 return results;
+            }
+
+            var list = value as YamlSequenceNode;
+            if (list != null)
+            {
+                var listResults = new List<string>();
+                foreach (var entry in list.Children)
+                {
+                    var node = entry as YamlScalarNode;
+                    if (node != null)
+                    {
+                        listResults.Add(node.Value);
+                    }
+                }
+                return listResults;
             }
 
             return value.ToString();

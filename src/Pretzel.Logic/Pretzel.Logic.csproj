@@ -81,6 +81,12 @@
   <ItemGroup>
     <Compile Include="Commands\CommandParameters.cs" />
     <Compile Include="Exceptions\PageProcessingException.cs" />
+    <Compile Include="Extensibility\Extensions\PrettifyUrlFilter.cs" />
+    <Compile Include="Extensibility\Extensions\SlugifyFilter.cs" />
+    <Compile Include="Extensibility\IContentTransform.cs" />
+    <Compile Include="Extensibility\Extensions\WebSequenceDiagrams.cs" />
+    <Compile Include="Extensibility\IHaveCommandLineArgs.cs" />
+    <Compile Include="Extensibility\IFilter.cs" />
     <Compile Include="Extensions\Logger.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\Tracing.cs" />
@@ -89,6 +95,8 @@
     <Compile Include="Import\HtmlToMarkdownConverter.cs" />
     <Compile Include="Import\WordpressImport.cs" />
     <Compile Include="Import\WordpressImportSql.cs" />
+    <Compile Include="Liquid\HighlightBlock.cs" />
+    <Compile Include="Liquid\XmlEscapeFilter.cs" />
     <Compile Include="Minification\FileSystemExtensions.cs" />
     <Compile Include="Minification\LessTransform.cs" />
     <Compile Include="Minification\ITransform.cs" />
@@ -109,7 +117,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Templating\Context\Category.cs" />
+    <Compile Include="Templating\Context\NonProcessedPage.cs" />
     <Compile Include="Templating\Context\Page.cs" />
+    <Compile Include="Templating\Context\Paginator.cs" />
     <Compile Include="Templating\Context\Post.cs" />
     <Compile Include="Templating\Context\SiteContextGenerator.cs" />
     <Compile Include="Templating\Context\Tag.cs" />
@@ -117,7 +128,7 @@
     <Compile Include="Templating\Jekyll\Includes.cs" />
     <Compile Include="Templating\Jekyll\PostDrop.cs" />
     <Compile Include="Templating\Jekyll\SiteContextDrop.cs" />
-    <Compile Include="Templating\Jekyll\Paginator.cs" />
+    <Compile Include="Templating\Razor\ExtensibleTemplate.cs" />
     <Compile Include="Templating\Razor\IncludesResolver.cs" />
     <Compile Include="Templating\Razor\RazorSiteEngine.cs" />
     <Compile Include="Templating\JekyllEngineBase.cs" />

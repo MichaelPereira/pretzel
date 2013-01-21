@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using DotLiquid;
 
 namespace Pretzel.Logic.Templating.Context
 {
-    public class Page
+    public class Page : Drop
     {
         public Page()
         {
@@ -21,6 +22,7 @@ namespace Pretzel.Logic.Templating.Context
         public string Content { get; set; }
         public string Filepath { get; set; }
         public IDictionary<string, object> Bag { get; set; }
+        public IEnumerable<Page> DirectoryPages { get; set; }
         public string File { get; set; }
         public string OutputFile { get; set; }
 
@@ -28,9 +30,5 @@ namespace Pretzel.Logic.Templating.Context
         {
             get { return (string)Bag["layout"]; }
         }
-    }
-
-    public class NonProcessedPage : Page
-    {
     }
 }

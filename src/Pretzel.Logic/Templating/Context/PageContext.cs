@@ -11,6 +11,19 @@ namespace Pretzel.Logic.Templating.Context
             Page = page;
         }
 
+        public PageContext(PageContext context)
+        {
+            Title = context.Title;
+            OutputPath = context.OutputPath;
+            Bag = context.Bag;
+            Content = context.Content;
+            Site = context.Site;
+            Page = context.Page;
+            Previous = context.Previous;
+            Next = context.Next;
+            Paginator = context.Paginator;
+        }
+
         public string Title { get; set; }
         public string OutputPath { get; set; }
         public IDictionary<string, object> Bag { get; set; }
@@ -19,32 +32,12 @@ namespace Pretzel.Logic.Templating.Context
         public Page Page { get; set; }
         public Page Previous { get; set; }
         public Page Next { get; set; }
+        public Paginator Paginator { get; set; }
 
         public bool Comments
         {
             get { return Bag.ContainsKey("comments") && bool.Parse(Bag["comments"].ToString()); }
         }
-
-        //public static PageContext FromDictionary(SiteContext siteContext, IDictionary<string, object> metadata, string outputPath, string defaultOutputPath)
-        //{
-        //    var context = new PageContext(siteContext, TODO)
-        //                      {
-        //                          OutputPath =
-        //                              metadata.ContainsKey("permalink")
-        //                                  ? Path.Combine(outputPath, metadata["permalink"].ToString().ToRelativeFile())
-        //                                  : defaultOutputPath
-        //                      };
-
-
-        //    if (metadata.ContainsKey("title"))
-        //    {
-        //        context.Title = metadata["title"].ToString();
-        //    }
-
-        //    context.Bag = metadata;
-
-        //    return context;
-        //}
 
         public static PageContext FromPage(SiteContext siteContext, Page page, string outputPath, string defaultOutputPath)
         {

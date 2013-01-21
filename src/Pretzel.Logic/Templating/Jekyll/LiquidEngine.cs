@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using DotLiquid;
+using Pretzel.Logic.Liquid;
 using Pretzel.Logic.Templating.Context;
 using Pretzel.Logic.Templating.Jekyll.Liquid;
 
@@ -20,6 +21,13 @@ namespace Pretzel.Logic.Templating.Jekyll
         protected override void PreProcess()
         {
             contextDrop = new SiteContextDrop(Context);
+            if (Filters != null)
+            {
+               foreach (var filter in Filters)
+               {
+                  Template.RegisterFilter(filter.GetType());
+               }
+            }
         }
 
         Hash CreatePageData(PageContext pageContext)
@@ -44,12 +52,9 @@ namespace Pretzel.Logic.Templating.Jekyll
                 wtftime = Hash.FromAnonymousObject(new { date = DateTime.Now }),
                 page = y,
                 content = pageContext.Content,
+                paginator = pageContext.Paginator, 
             });
 
-            if (Context.Config.ContainsKey("paginate") && pageContext.OutputPath.EndsWith("index.html"))
-            {
-                x.Add("paginator", new Paginator(Context));
-            }
             return x;
         }
 
@@ -58,13 +63,14 @@ namespace Pretzel.Logic.Templating.Jekyll
             var data = CreatePageData(pageData);
             var template = Template.Parse(templateContents);
             Template.FileSystem = new Includes(Context.SourceFolder);
-            return template.Render(data);
+            var output = template.Render(data);
+            return output;
         }
 
         public override void Initialize()
         {
-            //Template.RegisterTag<RenderTime>("render_time");
-            //Template.RegisterTag<TagCloud>("tag_cloud");
+            Template.RegisterFilter(typeof(XmlEscapeFilter));
+            Template.RegisterTag<HighlightBlock>("highlight");
         }
     }
 }
